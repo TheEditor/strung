@@ -1,72 +1,68 @@
 # strung
 
-## Description
+Transform [UBS (Ultimate Bug Scanner)](https://github.com/Dicklesworthstone/ultimate_bug_scanner) findings into [Beads](https://github.com/steveyegge/beads) issue tracker entries.
 
-[Add project description here]
-
-## Setup
+## Installation
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd strung
-
-# [Add setup instructions here]
+go install github.com/TheEditor/strung/cmd/strung@latest
 ```
 
 ## Usage
 
-[Add usage instructions here]
+```bash
+# Basic transformation
+ubs --format=json src/ | strung
+
+# Filter by severity (critical, warning, info)
+ubs --format=json src/ | strung --min-severity=critical
+
+# Import directly to Beads
+ubs --format=json src/ | strung | bd import
+
+# Verbose output for debugging
+ubs --format=json src/ | strung --verbose 2>&1 | head
+```
+
+## Options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--min-severity` | `warning` | Minimum severity to include |
+| `--verbose` | `false` | Enable debug logging to stderr |
+| `--version` | - | Print version and exit |
+
+## Exit Codes
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success |
+| 1 | Input error (invalid JSON) |
+| 2 | Usage error (invalid flags) |
+
+## Why Strung?
+
+UBS already has `--beads-jsonl` for basic export. Strung adds:
+- Severity filtering (`--min-severity`)
+- Future: bidirectional sync (Phase 2)
+- Future: deduplication/fingerprinting (Phase 2)
 
 ## Development
 
-### Prerequisites
-
-- [List prerequisites here]
-
-### Running Locally
-
 ```bash
-# [Add development commands here]
+# Build
+make build
+
+# Test
+make test
+
+# Test with coverage
+make test-coverage
+
+# Demo
+make demo
 ```
-
-### Testing
-
-```bash
-# [Add testing commands here]
-```
-
-## Issue Tracking
-
-This project uses [Beads](https://github.com/jfischoff/beads) for issue tracking.
-
-```bash
-# View all issues
-bd list
-
-# Create new issue
-bd create --title "Issue title" --description "Issue description"
-
-# View issue details
-bd show <issue-id>
-```
-
-## Code Quality
-
-This project uses [UBS (Ultimate Bug Scanner)](https://github.com/Dicklesworthstone/ultimate_bug_scanner) for static analysis.
-
-```bash
-# Run scanner on source code
-ubs .
-
-# Run with strict mode (fail on warnings)
-ubs . --fail-on-warning
-```
-
-## Contributing
-
-[Add contribution guidelines here]
 
 ## License
 
-[Add license information here]
+MIT
