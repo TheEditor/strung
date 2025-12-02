@@ -1,0 +1,37 @@
+{
+  "project": "/home/user/myproject",
+  "files_scanned": 15,
+  "findings": [
+    {
+      "file": "src/crypto.ts",
+      "line": 42,
+      "column": 5,
+      "severity": "critical",
+      "category": "null-safety",
+      "message": "Unguarded property access after encryption operation",
+      "suggestion": "Add null check: if (!result) throw new Error(...)",
+      "code_snippet": "return result.encryptedData;"
+    },
+    {
+      "file": "src/vault.ts",
+      "line": 87,
+      "severity": "warning",
+      "category": "resource-lifecycle",
+      "message": "File handle opened without explicit close",
+      "suggestion": "Use try-finally or wrap in async context manager"
+    },
+    {
+      "file": "src/cli.ts",
+      "line": 156,
+      "severity": "info",
+      "category": "code-quality",
+      "message": "Console.log statement in production code",
+      "suggestion": "Replace with proper logging or remove"
+    }
+  ],
+  "summary": {
+    "critical": 1,
+    "warning": 1,
+    "info": 1
+  }
+}
