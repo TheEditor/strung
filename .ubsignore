@@ -1,0 +1,51 @@
+# UBS Scanner Ignore File
+# Excludes non-source files from bug scanning
+
+# Dependencies
+node_modules/
+vendor/
+packages/
+
+# Build outputs
+.next/
+build/
+dist/
+target/
+out/
+bin/
+obj/
+
+# Version control & IDE
+.git/
+.vscode/
+.idea/
+.beads/
+.claude/
+
+# Documentation & metadata
+docs/
+history/
+openspec/
+
+# Scripts (usually not app code)
+scripts/
+
+# Static assets
+public/
+static/
+assets/
+
+# File types to skip
+*.md
+*.json
+*.config.*
+*.log
+*.txt
+*.lock
+*.sum
+
+# Environment & secrets
+.env*
+*.key
+*.pem
+*.cert
