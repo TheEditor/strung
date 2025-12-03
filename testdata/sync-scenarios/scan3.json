@@ -1,0 +1,14 @@
+{
+  "project": "/test/project",
+  "files_scanned": 2,
+  "findings": [
+    {
+      "file": "src/crypto.ts",
+      "line": 87,
+      "severity": "warning",
+      "category": "resource-lifecycle",
+      "message": "File handle opened without explicit close"
+    }
+  ],
+  "summary": {"critical": 0, "warning": 1, "info": 0}
+}

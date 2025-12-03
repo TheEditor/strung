@@ -1,0 +1,21 @@
+{
+  "project": "/test/project",
+  "files_scanned": 3,
+  "findings": [
+    {
+      "file": "src/vault.ts",
+      "line": 42,
+      "severity": "critical",
+      "category": "null-safety",
+      "message": "Unguarded property access after encryption"
+    },
+    {
+      "file": "src/crypto.ts",
+      "line": 87,
+      "severity": "warning",
+      "category": "resource-lifecycle",
+      "message": "File handle opened without explicit close"
+    }
+  ],
+  "summary": {"critical": 1, "warning": 1, "info": 0}
+}

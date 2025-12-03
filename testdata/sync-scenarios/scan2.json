@@ -1,0 +1,28 @@
+{
+  "project": "/test/project",
+  "files_scanned": 3,
+  "findings": [
+    {
+      "file": "src/vault.ts",
+      "line": 42,
+      "severity": "warning",
+      "category": "null-safety",
+      "message": "Unguarded property access after encryption"
+    },
+    {
+      "file": "src/crypto.ts",
+      "line": 87,
+      "severity": "warning",
+      "category": "resource-lifecycle",
+      "message": "File handle opened without explicit close"
+    },
+    {
+      "file": "src/cli.ts",
+      "line": 15,
+      "severity": "info",
+      "category": "code-quality",
+      "message": "Console.log in production code"
+    }
+  ],
+  "summary": {"critical": 0, "warning": 2, "info": 1}
+}
