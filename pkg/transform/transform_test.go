@@ -3,6 +3,7 @@ package transform
 import (
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/TheEditor/strung/pkg/parser"
 )
@@ -129,5 +130,105 @@ func TestTransformAll_SkipsInvalid(t *testing.T) {
 	issues := transformer.TransformAll(findings)
 	if len(issues) != 2 {
 		t.Errorf("Expected 2 valid issues, got %d", len(issues))
+	}
+}
+
+func TestTransformWithConfig_FileLinks(t *testing.T) {
+	config := &TransformConfig{
+		RepoURL:    "https://github.com/user/repo",
+		RepoBranch: "main",
+		ScanTime:   time.Now(),
+	}
+
+	transformer := NewTransformerWithConfig(config)
+
+	finding := parser.UBSFinding{
+		File:     "src/test.ts",
+		Line:     42,
+		Severity: "critical",
+		Category: "null-safety",
+		Message:  "Test",
+	}
+
+	issue, err := transformer.Transform(finding)
+	if err != nil {
+		t.Fatalf("Transform failed: %v", err)
+	}
+
+	// Check for clickable link
+	expectedLink := "https://github.com/user/repo/blob/main/src/test.ts#L42"
+	if !strings.Contains(issue.Description, expectedLink) {
+		t.Errorf("Description missing file link: %s", issue.Description)
+	}
+
+	// Check for timestamp
+	if !strings.Contains(issue.Description, "**Detected:**") {
+		t.Error("Description missing timestamp")
+	}
+}
+
+func TestTransformWithConfig_Tags(t *testing.T) {
+	config := &TransformConfig{
+		ScanTime: time.Now(),
+	}
+
+	transformer := NewTransformerWithConfig(config)
+
+	finding := parser.UBSFinding{
+		File:     "src/handler.ts",
+		Line:     1,
+		Severity: "warning",
+		Category: "resource-leak",
+		Message:  "Test",
+	}
+
+	issue, err := transformer.Transform(finding)
+	if err != nil {
+		t.Fatalf("Transform failed: %v", err)
+	}
+
+	// Check tags
+	expectedTags := []string{"ubs", "ubs:resource-leak", "severity:warning", "lang:ts"}
+	for _, expected := range expectedTags {
+		found := false
+		for _, tag := range issue.Tags {
+			if tag == expected {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("Missing tag: %s (got: %v)", expected, issue.Tags)
+		}
+	}
+}
+
+func TestTransformWithConfig_NoRepoURL(t *testing.T) {
+	config := &TransformConfig{
+		ScanTime: time.Now(),
+		// No RepoURL
+	}
+
+	transformer := NewTransformerWithConfig(config)
+
+	finding := parser.UBSFinding{
+		File:     "test.ts",
+		Line:     1,
+		Severity: "info",
+		Category: "x",
+		Message:  "Test",
+	}
+
+	issue, err := transformer.Transform(finding)
+	if err != nil {
+		t.Fatalf("Transform failed: %v", err)
+	}
+
+	// Should have backtick location, not link
+	if !strings.Contains(issue.Description, "`test.ts:1`") {
+		t.Errorf("Should have backtick location: %s", issue.Description)
+	}
+	if strings.Contains(issue.Description, "](http") {
+		t.Error("Should not have link without RepoURL")
 	}
 }

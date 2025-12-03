@@ -142,7 +142,12 @@ func (s *syncCmd) run() int {
 }
 
 func (s *syncCmd) executeActions(database *db.TrackingDB, result *sync.DiffResult) int {
-	transformer := transform.NewTransformer()
+	config := &transform.TransformConfig{
+		RepoURL:    s.repoURL,
+		RepoBranch: s.repoBranch,
+		ScanTime:   time.Now(),
+	}
+	transformer := transform.NewTransformerWithConfig(config)
 	now := time.Now()
 	hasErrors := false
 

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
+	"strings"
+	"time"
 
 	"github.com/TheEditor/strung/pkg/beads"
 	"github.com/TheEditor/strung/pkg/parser"
@@ -18,6 +20,27 @@ type Transformer struct {
 // NewTransformer creates a new transformer
 func NewTransformer() *Transformer {
 	return &Transformer{}
+}
+
+// TransformConfig provides context for enhanced transformation
+type TransformConfig struct {
+	RepoURL    string    // e.g., "https://github.com/user/repo"
+	RepoBranch string    // e.g., "main"
+	ScanTime   time.Time // When scan was performed
+}
+
+// TransformerWithConfig embeds base transformer with enrichment
+type TransformerWithConfig struct {
+	*Transformer
+	config *TransformConfig
+}
+
+// NewTransformerWithConfig creates enriched transformer
+func NewTransformerWithConfig(config *TransformConfig) *TransformerWithConfig {
+	return &TransformerWithConfig{
+		Transformer: NewTransformer(),
+		config:      config,
+	}
 }
 
 // Transform converts a UBS finding to a Beads issue.
@@ -136,4 +159,72 @@ func (t *Transformer) SeverityToType(severity string) string {
 	default:
 		return beads.TypeTask
 	}
+}
+
+// Transform converts finding with enrichment (overrides base method)
+func (t *TransformerWithConfig) Transform(finding parser.UBSFinding) (*beads.Issue, error) {
+	issue, err := t.Transformer.Transform(finding)
+	if err != nil {
+		return nil, err
+	}
+
+	// Enrich description with metadata
+	issue.Description = t.makeEnrichedDescription(finding)
+
+	// Add richer tags
+	issue.Tags = t.makeEnrichedTags(finding)
+
+	return issue, nil
+}
+
+// makeEnrichedDescription builds description with links and timestamps
+func (t *TransformerWithConfig) makeEnrichedDescription(f parser.UBSFinding) string {
+	var desc strings.Builder
+
+	// Scan timestamp
+	if !t.config.ScanTime.IsZero() {
+		desc.WriteString(fmt.Sprintf("**Detected:** %s\n\n",
+			t.config.ScanTime.Format("2006-01-02 15:04:05")))
+	}
+
+	// File link (if repo URL provided)
+	if t.config.RepoURL != "" {
+		fileLink := fmt.Sprintf("%s/blob/%s/%s#L%d",
+			strings.TrimSuffix(t.config.RepoURL, "/"),
+			t.config.RepoBranch,
+			f.File,
+			f.Line)
+		desc.WriteString(fmt.Sprintf("**Location:** [%s:%d](%s)\n\n",
+			f.File, f.Line, fileLink))
+	} else {
+		desc.WriteString(fmt.Sprintf("**Location:** `%s:%d`\n\n", f.File, f.Line))
+	}
+
+	desc.WriteString(fmt.Sprintf("**Message:** %s\n\n", f.Message))
+
+	if f.CodeSnippet != "" {
+		desc.WriteString(fmt.Sprintf("**Code:**\n```\n%s\n```\n\n", f.CodeSnippet))
+	}
+
+	if f.Suggestion != "" {
+		desc.WriteString(fmt.Sprintf("**Suggestion:** %s\n", f.Suggestion))
+	}
+
+	return desc.String()
+}
+
+// makeEnrichedTags creates comprehensive tag set
+func (t *TransformerWithConfig) makeEnrichedTags(f parser.UBSFinding) []string {
+	tags := []string{
+		"ubs",
+		fmt.Sprintf("ubs:%s", f.Category),
+		fmt.Sprintf("severity:%s", f.Severity),
+	}
+
+	// Add file extension as tag for filtering
+	if ext := filepath.Ext(f.File); ext != "" {
+		tags = append(tags, fmt.Sprintf("lang:%s", strings.TrimPrefix(ext, ".")))
+	}
+
+	return tags
 }
