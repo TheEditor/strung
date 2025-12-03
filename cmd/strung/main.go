@@ -41,6 +41,22 @@ func main() {
 		fs.Parse(os.Args[2:])
 		os.Exit(syncCmd.run())
 
+	case "recover":
+		fs := flag.NewFlagSet("recover", flag.ExitOnError)
+		recoverCmd := newRecoverCmd()
+		recoverCmd.flags(fs)
+
+		// Check for help flag
+		for _, arg := range os.Args[2:] {
+			if arg == "-h" || arg == "--help" || arg == "-help" {
+				recoverCmd.usage()
+				os.Exit(0)
+			}
+		}
+
+		fs.Parse(os.Args[2:])
+		os.Exit(recoverCmd.run())
+
 	case "version", "--version", "-v":
 		fmt.Printf("strung v%s\n", versionStr)
 		os.Exit(0)
@@ -64,6 +80,7 @@ Usage: strung <command> [flags]
 Commands:
   transform   One-way transform: UBS JSON → Beads JSONL (stdin → stdout)
   sync        Incremental sync with state tracking (bidirectional)
+  recover     Check and recover database consistency
   version     Print version
   help        Show this help
 
@@ -74,6 +91,10 @@ Transform Examples:
 Sync Examples:
   ubs --format=json src/ | strung sync --db-path=.strung.db
   ubs --format=json src/ | strung sync --auto-close
+
+Recovery Examples:
+  strung recover --db-path=.strung.db
+  strung recover --db-path=.strung.db --fix
 
 Run 'strung <command> --help' for command-specific help.
 `)
