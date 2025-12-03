@@ -1,12 +1,12 @@
-# Binaries
-strung
-strung.exe
-strung-test
-*.exe
+# Binaries (root directory only)
+/strung
+/strung.exe
+/strung-test
+/*.exe
 
 # Test artifacts
-coverage.out
-coverage.html
+/coverage.out
+/coverage.html
 
 # IDE
 .idea/
