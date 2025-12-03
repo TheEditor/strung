@@ -29,7 +29,7 @@ func TestCLIIntegration(t *testing.T) {
 	t.Run("basic transformation", func(t *testing.T) {
 		input := `{"project":"/test","files_scanned":1,"findings":[{"file":"test.ts","line":42,"severity":"critical","category":"null-safety","message":"Test message"}],"summary":{"critical":1,"warning":0,"info":0}}`
 
-		cmd := exec.Command(binPath)
+		cmd := exec.Command(binPath, "transform")
 		cmd.Stdin = strings.NewReader(input)
 		var stdout, stderr bytes.Buffer
 		cmd.Stdout = &stdout
@@ -49,7 +49,7 @@ func TestCLIIntegration(t *testing.T) {
 	})
 
 	t.Run("version flag", func(t *testing.T) {
-		cmd := exec.Command(binPath, "--version")
+		cmd := exec.Command(binPath, "version")
 		output, err := cmd.Output()
 		if err != nil {
 			t.Fatalf("Version failed: %v", err)
@@ -66,7 +66,7 @@ func TestCLIIntegration(t *testing.T) {
 			{"file":"c.ts","line":3,"severity":"info","category":"x","message":"m"}
 		],"summary":{"critical":1,"warning":1,"info":1}}`
 
-		cmd := exec.Command(binPath, "--min-severity=critical")
+		cmd := exec.Command(binPath, "transform", "--min-severity=critical")
 		cmd.Stdin = strings.NewReader(input)
 		output, err := cmd.Output()
 		if err != nil {
@@ -82,7 +82,7 @@ func TestCLIIntegration(t *testing.T) {
 	t.Run("empty findings", func(t *testing.T) {
 		input := `{"project":"/test","files_scanned":0,"findings":[],"summary":{}}`
 
-		cmd := exec.Command(binPath)
+		cmd := exec.Command(binPath, "transform")
 		cmd.Stdin = strings.NewReader(input)
 		var stdout bytes.Buffer
 		cmd.Stdout = &stdout
@@ -97,7 +97,7 @@ func TestCLIIntegration(t *testing.T) {
 	})
 
 	t.Run("invalid JSON", func(t *testing.T) {
-		cmd := exec.Command(binPath)
+		cmd := exec.Command(binPath, "transform")
 		cmd.Stdin = strings.NewReader("{invalid json")
 		var stderr bytes.Buffer
 		cmd.Stderr = &stderr
@@ -113,7 +113,7 @@ func TestCLIIntegration(t *testing.T) {
 	})
 
 	t.Run("invalid severity flag", func(t *testing.T) {
-		cmd := exec.Command(binPath, "--min-severity=invalid")
+		cmd := exec.Command(binPath, "transform", "--min-severity=invalid")
 		err := cmd.Run()
 		if err == nil {
 			t.Error("Should fail on invalid severity")
