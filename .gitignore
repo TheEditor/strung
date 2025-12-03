@@ -1,46 +1,28 @@
-# Dependencies
-node_modules/
-vendor/
-packages/
-
-# Build outputs
-.next/
-build/
-dist/
-target/
-out/
-*.o
+# Binaries
+strung
+strung.exe
+strung-test
 *.exe
 
-# Logs
-*.log
-logs/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Environment variables
-.env
-.env.local
-.env*.local
+# Test artifacts
+coverage.out
+coverage.html
 
 # IDE
-.vscode/
 .idea/
+.vscode/
 *.swp
-*.swo
-*~
 
 # OS
 .DS_Store
 Thumbs.db
-desktop.ini
 
-# Testing
-coverage/
-.nyc_output/
+# Phase 1 setup
+.phase1-issue-ids.env
 
-# Temporary files
-*.tmp
-*.temp
-.cache/
+# Phase 2
+.strung.db
+.strung.db-shm
+.strung.db-wal
+.strung.db-journal
+.phase2-issue-ids.env
