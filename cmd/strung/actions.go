@@ -31,8 +31,16 @@ func createBeadsIssue(issue *beads.Issue) (string, error) {
 	if issue.Acceptance != "" {
 		args = append(args, "--acceptance", issue.Acceptance)
 	}
-	for _, tag := range issue.Tags {
-		args = append(args, "--tag", tag)
+	if len(issue.Tags) > 0 {
+		// bd uses -l/--labels with comma-separated values
+		labels := ""
+		for i, tag := range issue.Tags {
+			if i > 0 {
+				labels += ","
+			}
+			labels += tag
+		}
+		args = append(args, "-l", labels)
 	}
 
 	cmd := exec.Command("bd", args...)
