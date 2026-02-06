@@ -76,7 +76,7 @@ See docs/SYNC.md for complete documentation.
 }
 
 func (s *syncCmd) run() int {
-	// Verify bd CLI available (unless dry-run)
+	// Verify br CLI available (unless dry-run)
 	if !s.dryRun {
 		if err := checkBeadsCLI(); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
@@ -165,7 +165,7 @@ func (s *syncCmd) executeActions(database *db.TrackingDB, result *sync.DiffResul
 			continue
 		}
 
-		// Create via bd CLI
+		// Create via br CLI
 		issueID, err := createBeadsIssue(issue)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "ERROR creating issue: %v\n", err)

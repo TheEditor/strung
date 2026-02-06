@@ -89,7 +89,7 @@ ubs --format=json src/ | strung sync \
 ubs --format=json src/ | strung sync --db-path=.strung.db
 
 # Check for remaining issues
-bd list --status open | wc -l
+br list --status open | wc -l
 ```
 
 ## Flags Reference
@@ -220,12 +220,12 @@ ubs --format=json src/ | strung sync --db-path=.strung.db
 
 ## Troubleshooting
 
-### "bd CLI not found"
+### "br CLI not found"
 
 Error:
 ```
-Error: bd CLI not found or not working
-Install: https://github.com/steveyegge/beads
+Error: br CLI not found or not working
+Install: https://github.com/Dicklesworthstone/beads_rust
 ```
 
 Solution: Install Beads issue tracker
@@ -238,7 +238,7 @@ brew install steveyegge/tools/beads
 go install github.com/steveyegge/beads@latest
 ```
 
-Note: `--dry-run` works without bd CLI available.
+Note: `--dry-run` works without br CLI available.
 
 ### "Issues not closing with --auto-close"
 
@@ -246,7 +246,7 @@ Possible causes:
 
 1. **Issues already closed**: Check Beads status
    ```bash
-   bd list --status closed | grep proj-014
+   br list --status closed | grep proj-014
    ```
 
 2. **No resolved findings detected**: Verify findings disappeared
@@ -342,7 +342,8 @@ Ensure findings are actually fixed:
 ubs --format=json src/ | strung sync --db-path=.strung.db --dry-run | grep "Would close"
 
 # Verify in Beads before auto-closing
-bd list | grep proj-014
+
+br list | grep proj-014
 ```
 
 ### 4. Use Repo URL for Context
@@ -427,4 +428,4 @@ ubs --format=json . | strung sync --min-severity=critical --db-path=.strung.db
 
 - [strung README](../README.md) - Overview and installation
 - [UBS Documentation](https://github.com/Dicklesworthstone/ultimate_bug_scanner) - Finding details
-- [Beads Issue Tracker](https://github.com/steveyegge/beads) - Issue management
+- [Beads Issue Tracker](https://github.com/Dicklesworthstone/beads_rust) - Issue management

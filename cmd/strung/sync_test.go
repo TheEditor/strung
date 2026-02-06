@@ -102,8 +102,8 @@ func TestSync_InvalidSeverity(t *testing.T) {
 }
 
 func TestSync_MultiScanWorkflow(t *testing.T) {
-	if _, err := exec.LookPath("bd"); err != nil {
-		t.Skip("bd CLI not available - skipping integration test")
+	if _, err := exec.LookPath("br"); err != nil {
+		t.Skip("br CLI not available - skipping integration test")
 	}
 
 	binPath := buildBinary(t)

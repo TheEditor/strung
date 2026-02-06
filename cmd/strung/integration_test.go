@@ -42,7 +42,7 @@ func TestIntegration_MultiScanScenarios(t *testing.T) {
 	cmd = exec.Command(binPath, "sync", "--db-path", dbPath)
 	cmd.Stdin = bytes.NewReader(scan1Data)
 	if err := cmd.Run(); err != nil {
-		t.Logf("Note: Scan 1 store failed (expected if bd CLI unavailable): %v", err)
+		t.Logf("Note: Scan 1 store failed (expected if br CLI unavailable): %v", err)
 	}
 
 	// Scenario 2: Verify detection of severity change (dry-run)
@@ -69,7 +69,7 @@ func TestIntegration_MultiScanScenarios(t *testing.T) {
 	cmd = exec.Command(binPath, "sync", "--db-path", dbPath)
 	cmd.Stdin = bytes.NewReader(scan2Data)
 	if err := cmd.Run(); err != nil {
-		t.Logf("Note: Scan 2 store failed (expected if bd CLI unavailable): %v", err)
+		t.Logf("Note: Scan 2 store failed (expected if br CLI unavailable): %v", err)
 	}
 
 	// Scenario 3: Verify detection of resolutions (dry-run)

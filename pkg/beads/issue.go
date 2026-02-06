@@ -9,7 +9,7 @@ import (
 )
 
 // Issue represents a Beads issue in JSONL format.
-// Fields match Beads import schema - see https://github.com/steveyegge/beads
+// Fields match Beads import schema - see https://github.com/Dicklesworthstone/beads_rust
 type Issue struct {
 	ID          string     `json:"id,omitempty"`
 	Title       string     `json:"title"`

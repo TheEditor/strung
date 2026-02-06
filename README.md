@@ -1,6 +1,6 @@
 # strung
 
-Transform [UBS (Ultimate Bug Scanner)](https://github.com/Dicklesworthstone/ultimate_bug_scanner) findings into [Beads](https://github.com/steveyegge/beads) issue tracker entries.
+Transform [UBS (Ultimate Bug Scanner)](https://github.com/Dicklesworthstone/ultimate_bug_scanner) findings into [Beads](https://github.com/Dicklesworthstone/beads_rust) issue tracker entries.
 
 ## Installation
 
@@ -20,7 +20,10 @@ ubs --format=json src/ | strung transform
 ubs --format=json src/ | strung transform --min-severity=critical
 
 # Import directly to Beads
-ubs --format=json src/ | strung transform | bd import
+
+ubs --format=json src/ | strung transform | br sync --import-only
+git add .beads/
+git commit -m "sync beads"
 
 # Verbose output for debugging
 ubs --format=json src/ | strung transform --verbose 2>&1 | head
